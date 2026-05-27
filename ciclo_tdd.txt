@@ -1,0 +1,117 @@
+======================================================
+ ATIVIDADE TDD - Sistema de Gerenciamento de Notas
+ Disciplina: Verificação e Validação de Software
+======================================================
+
+ESTRUTURA DO PROJETO:
+  projeto_notas/
+  ├── gerenciador_notas.py      (classe com os métodos)
+  ├── test_gerenciador_notas.py (testes unitários com pytest)
+  ├── relatorio_testes.html     (relatório gerado pelo pytest)
+  └── ciclo_tdd.txt             (este arquivo)
+
+======================================================
+ CICLO RED → GREEN → REFACTOR
+======================================================
+
+------------------------------------------------------
+ FUNCIONALIDADE 1: cadastrar_nota()
+------------------------------------------------------
+
+RED:
+  Escrevi primeiro o teste test_cadastrar_nota_valida(),
+  que tentava chamar g.cadastrar_nota(8.0) e verificar
+  se 8.0 estava em g.notas. Nesse momento o método não
+  existia, então o teste FALHOU com AttributeError.
+  Também escrevi test_cadastrar_nota_invalida_acima() e
+  test_cadastrar_nota_invalida_negativa() esperando que
+  um ValueError fosse lançado. Ambos falharam pois não
+  havia validação alguma.
+
+GREEN:
+  Implementei o método cadastrar_nota() com a lógica
+  mínima: adicionar a nota à lista self.notas.
+  Os testes de nota válida passaram.
+  Adicionei o if para lançar ValueError quando a nota
+  está fora do intervalo [0, 10]. Todos os testes
+  de cadastro passaram.
+
+REFACTOR:
+  Organizei a condição de validação em uma única linha
+  clara: "if nota < 0 or nota > 10", tornando o código
+  mais legível e sem duplicações.
+
+------------------------------------------------------
+ FUNCIONALIDADE 2: calcular_media()
+------------------------------------------------------
+
+RED:
+  Escrevi test_media_correta() cadastrando notas 6.0 e
+  8.0 e esperando média 7.0. O método não existia,
+  então o teste FALHOU.
+  Também escrevi test_media_sem_notas() esperando 0.0
+  quando a lista estivesse vazia.
+
+GREEN:
+  Implementei calcular_media() com sum()/len() para
+  calcular a média. O teste test_media_correta() passou.
+  Adicionei a verificação de lista vazia retornando 0.0.
+  Todos os testes de média passaram.
+
+REFACTOR:
+  Extraí a lógica em duas etapas claras: verificação de
+  lista vazia e cálculo da média, melhorando a
+  legibilidade sem alterar o comportamento.
+
+------------------------------------------------------
+ FUNCIONALIDADE 3: verificar_situacao()
+------------------------------------------------------
+
+RED:
+  Escrevi test_situacao_aprovado(), test_situacao_
+  recuperacao() e test_situacao_reprovado() antes de
+  qualquer implementação. Todos FALHARAM pois o método
+  não existia.
+  Adicionei também testes de borda: média exatamente 7
+  (Aprovado) e média exatamente 5 (Recuperação).
+
+GREEN:
+  Implementei verificar_situacao() com as condições:
+    - média >= 7 → "Aprovado"
+    - média >= 5 → "Recuperação"
+    - caso contrário → "Reprovado"
+  Todos os 5 testes de situação passaram.
+
+REFACTOR:
+  As condições já estavam claras. Aproveitei para garantir
+  que verificar_situacao() reutiliza calcular_media(),
+  evitando duplicação de lógica.
+
+======================================================
+ EVIDÊNCIA DA EXECUÇÃO DOS TESTES
+======================================================
+
+Comando executado:
+  python -m pytest test_gerenciador_notas.py -v --html=relatorio_testes.html
+
+Resultado:
+  collected 13 items
+
+  TestCadastrarNota::test_cadastrar_nota_valida          PASSED
+  TestCadastrarNota::test_cadastrar_nota_zero            PASSED
+  TestCadastrarNota::test_cadastrar_nota_dez             PASSED
+  TestCadastrarNota::test_cadastrar_nota_invalida_acima  PASSED
+  TestCadastrarNota::test_cadastrar_nota_invalida_negativa PASSED
+  TestCalcularMedia::test_media_correta                  PASSED
+  TestCalcularMedia::test_media_sem_notas                PASSED
+  TestCalcularMedia::test_media_uma_nota                 PASSED
+  TestVerificarSituacao::test_situacao_aprovado          PASSED
+  TestVerificarSituacao::test_situacao_recuperacao       PASSED
+  TestVerificarSituacao::test_situacao_reprovado         PASSED
+  TestVerificarSituacao::test_situacao_media_exatamente_7 PASSED
+  TestVerificarSituacao::test_situacao_media_exatamente_5 PASSED
+
+  ============================== 13 passed in 0.10s ==============================
+
+Relatório HTML gerado em: relatorio_testes.html
+======================================================
